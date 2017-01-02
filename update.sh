@@ -124,7 +124,7 @@ for version in "${versions[@]}"; do
 	fi
 
 	for target in \
-		apache \
+		apache apache/alpine \
 		fpm fpm/alpine \
 		zts zts/alpine \
 	; do
@@ -135,6 +135,10 @@ for version in "${versions[@]}"; do
 			variantVariant="${target#$variant/}"
 			[ -d "$version/$variantVariant" ] || continue
 			base="$version/$variantVariant/Dockerfile"
+
+			if ls | fgrep "$variant-$variantVariant-Dockerfile-block-"; then
+                variant="$variant-$variantVariant"
+            fi
 		fi
 		echo "Generating $version/$target/Dockerfile from $base + $variant-Dockerfile-block-*"
 		awk '
